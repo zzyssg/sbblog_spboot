@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzy.sbblog.dao.TypeMapper">
+
+    <resultMap id="type" type="com.zzy.sbblog.entity.Type">
+        <id column="type_id" property="id" />
+        <result column="name" property="name" />
+        <collection property="blogs" ofType="com.zzy.sbblog.entity.Blog" javaType="java.util.List">
+            <id column="blog_id" property="id"/>
+            <result column="title" property="title"/>
+            <result column="content" property="content"/>
+            <result column="first_picture" property="firstPicture"/>
+            <result column="flag" property="flag"/>
+            <result column="description" property="description"/>
+            <result column="views" property="views"/>
+            <result column="appreciation" property="appreciation"/>
+            <result column="sharement" property="sharement"/>
+            <result column="commentabled" property="commentabled"/>
+            <result column="published" property="published"/>
+            <result column="recommend" property="recommend"/>
+            <result column="update_time" property="updateTime"/>
+            <result column="type_id" property="typeId"/>
+            <result column="user_id" property="userId"/>
+            <association property="user" javaType="com.zzy.sbblog.entity.User">
+                <id column="user_id" property="id"/>
+                <result column="nickname" property="nickname"/>
+                <result column="avatar" property="avatar"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="queryTypeByTypeId" resultMap="type">
+        select
+            *
+        from
+            t_type ty
+        left join
+            t_blog_type bt
+        on
+            ty.type_id = bt.type_id
+        left join
+            t_blog b
+        on
+            b.blog_id = bt.blog_id
+        left join
+            t_user u
+        on
+            u.user_id = b.user_id
+        where
+            ty.type_id = #{typeId}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select
+            count(1)
+        from
+            t_type
+    </select>
+    <select id="queryAllTypes" resultMap="type">
+        select
+<!--            ty.type_id,ty.name,b.update_time,b.views,-->
+            *
+        from
+            t_type ty
+        left join
+            t_blog_type bt
+        on
+            ty.type_id = bt.type_id
+        left join
+            t_blog b
+        on
+            b.blog_id = bt.blog_id
+
+    </select>
+    <insert id="addType" parameterType="com.zzy.sbblog.entity.Type" keyProperty="id" useGeneratedKeys="true">
+        insert into
+            t_type (name)
+        values
+            (#{name})
+    </insert>
+    <delete id="deleteTypeByTypeId" parameterType="com.zzy.sbblog.entity.Type">
+        delete from
+            t_type
+        where
+            type_id = #{typeId}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzy.sbblog.dao.BlogMapper">
+    <resultMap id="blogVO" type="com.zzy.sbblog.vo.BlogVO">
+        <id column="blog_id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="recommend" property="recommend"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="first_picture" property="firstPicture"/>
+        <result column="sharement" property="sharement"/>
+        <result column="description" property="description"/>
+        <result column="recommend" property="recommend"/>
+        <result column="type_id" property="typeId"/>
+        <association property="type" javaType="com.zzy.sbblog.entity.Type">
+            <id column="type_id" property="id"/>
+            <result column="name" property="name"/>
+        </association>
+    </resultMap>
+    <select id="getAllBlogVOs" resultMap="blogVO">
+        select
+            b.blog_id, b.title, b.content, b.recommend,b.first_picture,b.sharement,
+            b.description,b.update_time, b.type_id, t.type_id, t.name
+        from
+            t_blog b
+        left join
+            t_blog_type bty
+        on
+            b.blog_id = bty.blog_id
+        left join
+            t_type t
+        on
+            bty.type_id = t.type_id
+        order by
+            b.update_time
+        desc
+    </select>
+    <select id="findById" resultMap="blogVO">
+        select * from t_blog where id = #{id}
+    </select>
+    <select id="queryBlogVOs" resultMap="blogVO">
+        select
+            b.blog_id, b.title, b.content, b.recommend,
+            b.update_time, b.type_id, t.type_id, t.name
+        from
+            t_blog b
+        left join
+            t_blog_type bty
+        on
+            b.blog_id = bty.blog_id
+        left join
+            t_type t
+        on
+            bty.type_id = t.type_id
+        <where>
+            <if test="title != null">
+                and b.title like '%' #{title} '%'
+            </if>
+            <if test="typeId != null">
+                and t.type_id = #{typeId}
+            </if>
+            <if test="recommend != null">
+                and b.recommend = #{recommend}
+            </if>
+        </where>
+        order by
+            b.update_time
+        desc
+
+    </select>
+
+    <resultMap id="blog" type="com.zzy.sbblog.entity.Blog">
+        <id column="blog_id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="first_picture" property="firstPicture"/>
+        <result column="flag" property="flag"/>
+        <result column="description" property="description"/>
+        <result column="views" property="views"/>
+        <result column="appreciation" property="appreciation"/>
+        <result column="sharement" property="sharement"/>
+        <result column="commentabled" property="commentabled"/>
+        <result column="published" property="published"/>
+        <result column="recommend" property="recommend"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="type_id" property="typeId"/>
+        <result column="user_id" property="userId"/>
+        <association property="type" javaType="com.zzy.sbblog.entity.Type">
+            <id column="type_id" property="id"/>
+            <result column="name" property="name"/>
+        </association>
+        <association property="user" javaType="com.zzy.sbblog.entity.User">
+            <id column="user_id" property="id"/>
+            <result column="nickname" property="nickname"/>
+            <result column="avatar" property="avatar"/>
+        </association>
+    </resultMap>
+    <select id="findAllBlogs" resultMap="blog">
+        select
+            *
+        from
+            t_blog b
+        left join
+            t_blog_user bu
+        on
+            b.blog_id = bu.blog_id
+        left join
+            t_user u
+        on
+            u.user_id = bu.user_id
+    </select>
+    <select id="queryBlogsByTypeId" resultMap="blog">
+        select
+<!--            b.blog_id, b.title, b.content, b.update_time, b.views, b.first_picture, b.flag,-->
+<!--            u.user_id, u.avatar, u.nickname-->
+            *
+        FROM
+            t_blog b
+        LEFT JOIN
+            t_blog_user bu
+        on
+            b.blog_id = bu.blog_id
+        LEFT JOIN
+            t_user u
+        on
+            bu.user_id = u.user_id
+        WHERE
+            b.type_id = #{typeId}
+
+    </select>
+    <select id="queryBlogById" resultMap="blog">
+        select
+            b.blog_id, b.title, b.content, b.update_time, b.views, b.first_picture, b.flag,
+            u.user_id, u.avatar, u.nickname
+        FROM
+            t_blog b
+        LEFT JOIN
+            t_blog_user bu
+        on
+            b.blog_id = bu.blog_id
+        LEFT JOIN
+            t_user u
+        on
+            bu.user_id = u.user_id
+        WHERE
+            b.blog_id = #{blogId}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select
+            count(1)
+        from
+            t_blog
+    </select>
+
+    <!--新增博客-->
+    <insert id="addBlog" parameterType="com.zzy.sbblog.entity.Blog" keyProperty="id" useGeneratedKeys="true">
+        insert into
+            t_blog (
+            title, content, first_picture, type_id, user_id, description,create_time, update_time )
+        values
+            (
+            #{title},#{content},#{firstPicture},#{typeId}, #{userId},#{description},#{createTime}, #{updateTime} )
+    </insert>
+
+    <insert id="addBlogType" parameterType="com.zzy.sbblog.entity.Blog">
+        insert into
+            t_blog_type (
+                blog_id, type_id
+            )
+        values
+            (
+                #{id}, #{typeId}
+            )
+    </insert>
+    
+    <insert id="addBlogUser" parameterType="com.zzy.sbblog.entity.Blog">
+        insert into
+            t_blog_user (user_id, blog_id)
+        values
+            ( #{userId}, #{id} )
+    </insert>
+
+    <delete id="deleteBlogById" parameterType="com.zzy.sbblog.entity.Blog">
+        delete from
+            t_blog
+        where
+            blog_id = #{blogId};
+
+        delete from
+            t_blog_type
+        where
+            blog_id = #{blogId};
+
+        delete from
+            t_blog_user
+        where
+            blog_id = #{blogId};
+    </delete>
+
+    <!--
+        insert into
+            t_blog (
+            title, content, first_picture, type_id, user_id, description,create_time, update_time )
+        values
+            (
+            #{title},#{content},#{firstPicture},#{typeId}, #{userId},#{description},#{createTime}, #{updateTime} )
+    -->
+
+    <update id="updateBlog" parameterType="com.zzy.sbblog.entity.Blog">
+        update
+            t_blog
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="firstPicture != null">first_picture = #{firstPicture},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="views != null">views = #{views},</if>
+        </set>
+        where
+            blog_id = #{id}
+    </update>
+</mapper>
