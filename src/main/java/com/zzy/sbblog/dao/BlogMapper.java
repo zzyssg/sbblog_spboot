@@ -18,6 +18,8 @@ public interface BlogMapper {
 
     Blog queryBlogById(Long blogId);
 
+    Blog queryBlogByBlogName(String blogName);
+
     Integer addBlog(Blog blog);
 
     Integer addBlogUser(Blog blog);

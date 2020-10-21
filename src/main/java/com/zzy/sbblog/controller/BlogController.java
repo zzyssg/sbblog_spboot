@@ -84,7 +84,8 @@ public class BlogController {
                 responseBean = new ResponseBean("000", "failed", blog);
             }
         } else {
-            /*新增操作*/
+            /*新增操作——1、title不重复 2、重复*/
+            /*查询所有的title，判断是否存在：若存在，*/
             Integer rows = blogService.addNewBlog(blog);
             if (rows != 1) {
                 responseBean = new ResponseBean("000", "failed", blog);

@@ -1,25 +1,32 @@
 package com.zzy.sbblog.service.impl;
 
 import com.zzy.sbblog.dao.BlogMapper;
+import com.zzy.sbblog.dao.TypeMapper;
 import com.zzy.sbblog.entity.Blog;
 import com.zzy.sbblog.entity.Type;
 import com.zzy.sbblog.entity.User;
+import com.zzy.sbblog.exception.CommonException;
 import com.zzy.sbblog.service.BlogService;
 import com.zzy.sbblog.vo.BlogArchieveVO;
 import com.zzy.sbblog.vo.BlogVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
 
 @Service
+@Transactional
 public class BlogServiceImpl implements BlogService {
 
     private Blog newBLog = new Blog();
 
     @Resource
     private BlogMapper blogMapper;
+
+    @Resource
+    private TypeMapper typeMapper;
 
     @Override
     public List<Blog> getList() {
@@ -80,15 +87,22 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Integer addBlog(Blog blog) {
         /*addBlog 、addBlogUser 、 addBlogType */
-        Blog blogToDao = new Blog();
+        /*根据blogName查询blog，假如查到则抛出异常*/
+        Blog blogToDao;
+        blogToDao = blogMapper.queryBlogByBlogName(blog.getTitle());
+        if(blogToDao != null){
+            /*数据库里已经存在*/
+            throw new CommonException("000","博客名已经存在，请更换博客名！");
+        }
+        blogToDao = new Blog();
         BeanUtils.copyProperties(blog, blogToDao);
         blogToDao.setCreateTime(new Date());
         blogToDao.setUpdateTime(new Date());
-        Type type = new Type();
-        type.setId(1L);
-        type.setName("日常");
-        blogToDao.setTypeId(1);
+        //根据typeId设置类型
+        Type type = typeMapper.queryTypeByTypeId(blog.getTypeId()+0L);
+        blogToDao.setTypeId(blog.getTypeId());
         blogToDao.setType(type);
+        //根据传来的userId设置user
         User user = new User();
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
