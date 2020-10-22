@@ -21,6 +21,11 @@ public class TypeServiceImpl implements TypeService {
         return typeMapper.queryTypeByTypeId(typeId);
     }
 
+    @Override
+    public Type queryTypeByName(String typeName) {
+        return typeMapper.queryTypeByName(typeName);
+    }
+
 //    @Override
 //    public List<Blog> queryTypeByTypeId(Long typeId) {
 //        return typeMapper.queryTypeByTypeId(typeId);

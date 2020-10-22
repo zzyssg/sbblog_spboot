@@ -12,6 +12,8 @@ public interface TypeMapper {
     Type queryTypeByTypeId(Long typeId);
 //    List<Blog> queryTypeByTypeId(Long typeId);
 
+    Type queryTypeByName(String typeName);
+
     List<Type> queryAllTypes();
 
     Integer addType(Type type);

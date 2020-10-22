@@ -8,6 +8,8 @@ import java.util.List;
 public interface TypeService {
 
     Type queryTypeByTypeId(Long typeId);
+
+    Type queryTypeByName(String typeName);
 //    List<Blog> queryTypeByTypeId(Long typeId);
 
     List<Type> queryAllTypes();
