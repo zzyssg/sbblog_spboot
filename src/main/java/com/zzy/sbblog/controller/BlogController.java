@@ -11,9 +11,13 @@ import com.zzy.sbblog.vo.BlogVO;
 import com.zzy.sbblog.vo.TypesAndTagsVo;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 
 @RestController
 @RequestMapping("/blogs")
@@ -81,7 +85,7 @@ public class BlogController {
 
     @PostMapping("/addBlog")
     public ResponseBean addBlog(@RequestBody Blog blog) {
-        ResponseBean responseBean = null;
+        ResponseBean responseBean;
         blog.setUpdateTime(new Date());
         if (blog.getId() != null && blog.getId() != -1) {
             /*更新操作*/

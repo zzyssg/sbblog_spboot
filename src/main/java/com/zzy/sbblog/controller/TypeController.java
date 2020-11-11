@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 @RestController
 @RequestMapping("/type")
 public class TypeController {
@@ -22,7 +26,6 @@ public class TypeController {
         Type type = typeService.queryTypeByTypeId(typeId);
         responseBean = new ResponseBean("001","success",type);
         return responseBean;
-
     }
 
     @GetMapping("/queryAllTypes")
@@ -44,7 +47,6 @@ public class TypeController {
         Type typeRtn = typeService.addType(type);
         if (typeRtn.getId() != null) {
             responseBean = new ResponseBean("001", "success", typeRtn);
-
         } else {
             responseBean = new ResponseBean("000", "failed", typeRtn);
         }

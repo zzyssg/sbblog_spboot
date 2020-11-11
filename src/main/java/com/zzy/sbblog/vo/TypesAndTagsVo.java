@@ -4,6 +4,10 @@ import com.zzy.sbblog.entity.Type;
 
 import java.util.List;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 public class TypesAndTagsVo {
     private List<Type> types;
 //    private List<Tags> tags;

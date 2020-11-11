@@ -16,8 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.*;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class BlogServiceImpl implements BlogService {
 
     private Blog newBLog = new Blog();
