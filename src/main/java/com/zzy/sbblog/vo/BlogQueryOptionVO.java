@@ -4,6 +4,10 @@ import com.zzy.sbblog.entity.Type;
 import lombok.Data;
 import lombok.ToString;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 @Data
 @ToString
 public class BlogQueryOptionVO {

@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {

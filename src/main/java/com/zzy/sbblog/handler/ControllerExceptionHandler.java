@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 @ControllerAdvice
 public class ControllerExceptionHandler {
 

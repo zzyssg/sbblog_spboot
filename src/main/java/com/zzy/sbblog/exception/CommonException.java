@@ -1,5 +1,9 @@
 package com.zzy.sbblog.exception;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 public class CommonException extends RuntimeException {
 
     private String retCode;
