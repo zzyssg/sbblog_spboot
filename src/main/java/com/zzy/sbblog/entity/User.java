@@ -1,14 +1,19 @@
 package com.zzy.sbblog.entity;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 用户角色
+ * @author zzy
+ */
 @Data
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     private Long id;
@@ -17,25 +22,12 @@ public class User {
     private String password;
     private String email;
     private String avatar;
+    /**
+     * TODO 将type更改为role
+     */
     private Integer type;
     private Date createTime;
     private Date updateTime;
 
     private List<Blog> blogs = new ArrayList<>();
-
-    public User() {
-    }
-
-    public User(Long id, String nickname, String username, String password, String email, String avatar, Integer type, Date createTime, Date updateTime, List<Blog> blogs) {
-        this.id = id;
-        this.nickname = nickname;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.avatar = avatar;
-        this.type = type;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
-        this.blogs = blogs;
-    }
 }

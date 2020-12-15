@@ -1,41 +1,60 @@
 package com.zzy.sbblog.entity;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author zzy
+ */
 @Data
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Comment {
 
-    private Long id;
-    private String nickname;
-    private String email;
+    /**
+     * 评论ID
+     */
+    private Integer commentId;
+    /**
+     * 评论所属用户
+     */
+    private Integer userId;
+    private User user;
+    /**
+     * 评论内容
+     */
     private String content;
-    private String avatar;
+    /**
+     * 评论时间
+     */
     private Date createTime;
 
-    private Blog blog;
+    /**
+     * 评论所属博客
+     */
+    private Integer blogId;
 
+    /**
+     * 评论的子评论
+     */
     private List<Comment> replyComments = new ArrayList<>();
 
-    private Comment parentComment;
+//    /**
+//     * 评论的上级
+//     */
+//    private Comment parentComment;
 
-    public Comment() {
-    }
+    /**
+     * 父级评论的用户
+     */
+    private User parentCommentUser;
 
-    public Comment(Long id, String nickname, String email, String content, String avatar, Date createTime, Blog blog, List<Comment> replyComments, Comment parentComment) {
-        this.id = id;
-        this.nickname = nickname;
-        this.email = email;
-        this.content = content;
-        this.avatar = avatar;
-        this.createTime = createTime;
-        this.blog = blog;
-        this.replyComments = replyComments;
-        this.parentComment = parentComment;
-    }
+    /**
+     * 父评论ID
+     */
+    private Integer parentCommentId;
 }

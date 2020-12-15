@@ -3,7 +3,9 @@ package com.zzy.sbblog.entity;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @ToString
@@ -33,8 +35,8 @@ public class Blog {
 
 
 //    private List<Tag> tags = new ArrayList<>();
-//    private List<Comment> comments = new ArrayList<>();
-//    private User user ;
+
+    private List<Comment> comments = new ArrayList<>();
 
 
     public Blog() {

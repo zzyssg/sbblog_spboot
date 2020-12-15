@@ -18,6 +18,7 @@
             <id column="type_id" property="id"/>
             <result column="name" property="name"/>
         </association>
+
     </resultMap>
     <select id="getAllBlogVOs" resultMap="blogVO">
         select
@@ -96,6 +97,14 @@
             <result column="nickname" property="nickname"/>
             <result column="avatar" property="avatar"/>
         </association>
+        <collection property="comments" ofType="com.zzy.sbblog.entity.Comment">
+            <id column="comment_id" property="commentId" />
+            <result column="blog_id" property="blogId"/>
+            <result column="commentUserId" property="userId"/>
+            <result column="commentContent" property="content"/>
+            <result column="create_time" property="createTime"/>
+            <result column="parent_comment_id" property="parentCommentId"/>
+        </collection>
     </resultMap>
     <select id="findAllBlogs" resultMap="blog">
         select
@@ -110,6 +119,10 @@
             t_user u
         on
             u.user_id = bu.user_id
+        left join
+            t_comments c
+        on
+            c.blog_id = b.blog_id
     </select>
     <select id="queryBlogsByTypeId" resultMap="blog">
         select
@@ -133,7 +146,8 @@
     <select id="queryBlogById" resultMap="blog">
         select
             b.blog_id, b.title, b.content, b.update_time, b.views, b.first_picture, b.flag,
-            u.user_id, u.avatar, u.nickname
+            u.user_id, u.avatar, u.nickname,
+            c.comment_id, c.blog_id, c.user_id as commentUserId, c.content as commentContent, c.create_time, c.parent_comment_id
         FROM
             t_blog b
         LEFT JOIN
@@ -144,6 +158,10 @@
             t_user u
         on
             bu.user_id = u.user_id
+        LEFT JOIN
+            t_comments c
+        on
+            b.blog_id = c.blog_id
         WHERE
             b.blog_id = #{blogId}
     </select>

@@ -1,21 +1,28 @@
 package com.zzy.sbblog.service.impl;
 
 import com.zzy.sbblog.dao.BlogMapper;
+import com.zzy.sbblog.dao.UserMapper;
 import com.zzy.sbblog.entity.Blog;
+import com.zzy.sbblog.entity.Comment;
 import com.zzy.sbblog.entity.Type;
 import com.zzy.sbblog.entity.User;
 import com.zzy.sbblog.service.BlogService;
+import com.zzy.sbblog.service.UserService;
 import com.zzy.sbblog.vo.BlogArchieveVO;
 import com.zzy.sbblog.vo.BlogVO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BlogServiceImpl implements BlogService {
 
+    private final UserService userService;
     private Blog newBLog = new Blog();
 
     @Resource
@@ -72,9 +79,87 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Blog queryBlogById(Long blodId) {
-        /*先根据blogId更新博客，然后再查询*/
+        Blog blog = blogMapper.queryBlogById(blodId);
+        //从blog中取出comments
+        List<Comment> resultComments = new ArrayList<>();
+        List<Comment> comments = blog.getComments();
+        if (!comments.isEmpty()) {
+            //去除特殊情况：当blog中没有comment时，仍能查出来一条，但是其comment中的成员变量，除了blogId以外均为空
+            //——因此去除这种特殊情况
+            if (comments.size() == 1 && comments.get(0).getContent() == null) {
+                comments.remove(0);
+            }
+            //此处处理一下comments
+            //TODO 首先为comments赋user
+            for (Comment comment : comments) {
+                Integer commentUserId = comment.getUserId();
+                User curUser = userService.getUserById(commentUserId);
+                comment.setUser(curUser);
+            }
+            //找到各自的parentComment——设置父级评论昵称
+            for (int i = 0; i < comments.size(); i++) {
+                Comment sonComment = comments.get(i);
+                if (sonComment.getParentCommentId() == null) {
+                    continue;
+                }
+                for (int j = 0; j < comments.size(); j++) {
+                    Comment fatherComment = comments.get(j);
+                    if (sonComment.getParentCommentId().equals(fatherComment.getCommentId())) {
+                        User parentCommentUser = User.builder()
+                                .nickname(fatherComment.getUser().getNickname())
+                                .avatar(fatherComment.getUser().getAvatar())
+                                .build();
+                        sonComment.setParentCommentUser(parentCommentUser);
+                    }
+                }
+            }
+            Map<Comment, List<Comment>> temComments = new HashMap<>();
+            //先筛选出根评论，并且将根评论的id映射出一个map，key为根评论id，value为其子孙评论id
+            for (Comment comment : comments) {
+                if (comment.getParentCommentId() == null) {
+                    //根评论
+                    temComments.put(comment, new ArrayList<>());
+                }
+            }
+            //遍历剩余评论，如果其parentId即为key的id或者 是key对应的value的id，将其扔进key对应的value里
+            for (Comment comment : comments) {
+                Integer curCommentParentId = comment.getParentCommentId();
+                for (Map.Entry<Comment, List<Comment>> entry : temComments.entrySet()) {
+                    Comment rootComment = entry.getKey();
+                    List<Comment> subComments = entry.getValue();
+                    Boolean isSubComment = curCommentParentId != null
+                            && (curCommentParentId.equals(rootComment.getCommentId())
+                            || hasParent(subComments,comment));
+                    if (isSubComment) {
+                        temComments.get(rootComment).add(comment);
+                    }
+                }
+            }
+            //处理一下temComments  key--comment有一个blogId
+            //将key对应的value设置到replements
+            for (Map.Entry<Comment, List<Comment>> entry : temComments.entrySet()) {
+                Comment comment = entry.getKey();
+                comment.setReplyComments(entry.getValue());
+                resultComments.add(comment);
+            }
+            blog.setComments(resultComments);
+        }
+        return blog;
+    }
 
-        return blogMapper.queryBlogById(blodId);
+    /**
+     *如果子评论中有其直接父评论，也加入进此根评论的子评论中
+     * @param subComments
+     * @param comment
+     * @return
+     */
+    private boolean hasParent(List<Comment> subComments, Comment comment) {
+        for (Comment subComment : subComments) {
+            if (subComment.getCommentId().equals(comment.getParentCommentId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -111,7 +196,10 @@ public class BlogServiceImpl implements BlogService {
         return blogMapper.addBlogType(blog);
     }
 
-    /*调用 addBlog 、 addBlogUser 、addBlogType*/
+    /**
+     *
+     * 调用 addBlog 、 addBlogUser 、addBlogType
+     */
     @Override
     public Integer addNewBlog(Blog blog) {
         /*添加到 t_blog 表*/

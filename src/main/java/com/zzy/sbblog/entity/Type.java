@@ -1,26 +1,30 @@
 package com.zzy.sbblog.entity;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 博客类型
+ * @author zzy
+ */
 @Data
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Type {
-
+    /**
+     * 类型ID
+     */
     private Long id;
+    /**
+     * 类型名称
+     */
     private String name;
-
+    /**
+     * 类型下博客集合
+     */
     private List<Blog> blogs = new ArrayList<>();
 
-    public Type() {
-    }
-
-    public Type(Long id, String name, List<Blog> blogs) {
-        this.id = id;
-        this.name = name;
-        this.blogs = blogs;
-    }
 }

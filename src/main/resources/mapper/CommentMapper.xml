@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzy.sbblog.dao.CommentMapper">
+    <resultMap id="comment" type="com.zzy.sbblog.entity.Comment">
+        <id column="comment_id" property="commentId" />
+        <result column="blog_id" property="blogId"/>
+        <result column="user_id" property="userId"/>
+        <result column="content" property="content"/>
+        <result column="create_time" property="createTime"/>
+        <result column="parent_comment_id" property="parentCommentId"/>
+    </resultMap>
+    <insert id="insertComment" parameterType="com.zzy.sbblog.entity.Comment" useGeneratedKeys="true" keyColumn="comment_id">
+        insert into
+            t_comments
+            (blog_id,user_id,parent_comment_id,content)
+        values
+            (#{blogId}, #{userId}, #{parentCommentId}, #{content})
+    </insert>
+</mapper>
