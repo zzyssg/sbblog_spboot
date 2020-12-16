@@ -23,8 +23,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/commit")
-    public Boolean commit(@RequestBody Comment comment){
-      log.info(comment.getContent());
+    public Boolean commit(@RequestBody Comment comment) {
+        log.info(comment.getContent());
+        //假如userId为-1，则前端是未登录的
+        if (comment.getUserId() == null || comment.getUserId().equals(-1)) {
+            return false;
+//            throw new IllegalArgumentException("前端未登录");
+        }
         try {
             Integer effected = commentService.addComment(comment);
         } catch (Exception e) {

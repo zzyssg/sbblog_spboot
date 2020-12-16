@@ -34,14 +34,19 @@ public class UserController {
 
         if (userQuery == null || !userQuery.getPassword().equals(user.getPassword())) {
             LoginVO loginVO = LoginVO.builder().nickname(username).username(username).build();
-            return new ResponseBean("000","登录失败！",loginVO);
+            return new ResponseBean("000", "登录失败！", loginVO);
         }
-        LoginVO loginVO = LoginVO.builder().nickname(username).username(username).token("123456")
+        LoginVO loginVO = LoginVO.builder()
+                .nickname(username)
+                .username(username)
+                .avatar(userQuery.getAvatar())
+                .token("123456")
                 .userId(userQuery.getId())
                 .build();
         return new ResponseBean("001", "success", loginVO);
 
     }
+
     @PostMapping("/frontRegister")
     public LoginVO frontRegister(@RequestBody User user) {
         String nickname = user.getNickname();
@@ -49,8 +54,8 @@ public class UserController {
         //如果未查到同名用户
 
         String password = user.getPassword();
-        log.info("用户名:{}",nickname);
-        log.info("用户密码:{}",password);
+        log.info("用户名:{}", nickname);
+        log.info("用户密码:{}", password);
         return LoginVO.builder()
                 .nickname(nickname)
                 .password(password)
