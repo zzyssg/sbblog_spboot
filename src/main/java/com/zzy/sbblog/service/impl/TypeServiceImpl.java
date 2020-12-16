@@ -1,16 +1,21 @@
 package com.zzy.sbblog.service.impl;
 
 import com.zzy.sbblog.dao.TypeMapper;
-import com.zzy.sbblog.entity.Blog;
 import com.zzy.sbblog.entity.Type;
 import com.zzy.sbblog.service.TypeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TypeServiceImpl implements TypeService {
 
     @Resource
@@ -19,6 +24,11 @@ public class TypeServiceImpl implements TypeService {
     @Override
     public Type queryTypeByTypeId(Long typeId) {
         return typeMapper.queryTypeByTypeId(typeId);
+    }
+
+    @Override
+    public Type queryTypeByName(String typeName) {
+        return typeMapper.queryTypeByName(typeName);
     }
 
 //    @Override

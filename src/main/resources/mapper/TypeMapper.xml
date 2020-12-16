@@ -73,6 +73,14 @@
             b.blog_id = bt.blog_id
 
     </select>
+    <select id="queryTypeByName" resultMap="type">
+        select
+            *
+        from
+            t_type
+        where
+            name = #{typeName}
+    </select>
     <insert id="addType" parameterType="com.zzy.sbblog.entity.Type" keyProperty="id" useGeneratedKeys="true">
         insert into
             t_type (name)
@@ -82,6 +90,11 @@
     <delete id="deleteTypeByTypeId" parameterType="com.zzy.sbblog.entity.Type">
         delete from
             t_type
+        where
+            type_id = #{typeId};
+
+        delete from
+            t_blog_type
         where
             type_id = #{typeId}
     </delete>

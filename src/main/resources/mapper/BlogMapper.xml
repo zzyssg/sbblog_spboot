@@ -165,6 +165,14 @@
         WHERE
             b.blog_id = #{blogId}
     </select>
+    <select id="queryBlogByBlogName" resultMap="blog">
+        select
+            blog_id,content
+        from
+            t_blog
+        where
+            title = #{blogName}
+    </select>
     <select id="count" resultType="java.lang.Integer">
         select
             count(1)

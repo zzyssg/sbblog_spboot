@@ -4,10 +4,12 @@ import com.zzy.sbblog.entity.Blog;
 import com.zzy.sbblog.vo.BlogArchieveVO;
 import com.zzy.sbblog.vo.BlogVO;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 public interface BlogService {
 
     List<Blog> getList();

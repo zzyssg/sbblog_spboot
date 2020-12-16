@@ -5,6 +5,10 @@ import lombok.ToString;
 
 import java.io.Serializable;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 @Data
 @ToString
 public class ResponseBean implements Serializable {

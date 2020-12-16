@@ -6,6 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+/**
+ * @author zzy
+ * @Date 2020/10/27 17:33
+ */
 @Mapper
 public interface BlogMapper {
     List<Blog>  getList();
@@ -17,6 +21,8 @@ public interface BlogMapper {
     List<Blog> queryBlogsByTypeId(Long typeId);
 
     Blog queryBlogById(Long blogId);
+
+    Blog queryBlogByBlogName(String blogName);
 
     Integer addBlog(Blog blog);
 
