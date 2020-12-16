@@ -37,7 +37,7 @@ public class UserController {
             return res;
         }
         /*查询用户存在与否*/
-        User userFind = userService.getUserByUsername(user.getUsername());
+        User userFind = userService.queryUserByName(user.getUsername());
         if(userFind == null){
             res = new ResponseBean("000","用户不存在",userFind);
             return res;
